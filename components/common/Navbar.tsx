@@ -29,8 +29,8 @@ export default function Navbar() {
         {/* Brand / Logo */}
         <div className="flex items-center space-x-6">
           <Link href="/dashboard" className="flex items-center space-x-2 group">
-            <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-100 group-hover:scale-105 transition-transform">
-              <FiTool className="text-sm" />
+            <div className="w-8">
+              <img src="/logo.png" alt="logo" className="w-full h-full" />
             </div>
             <span className="text-sm font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
               LendLoop
