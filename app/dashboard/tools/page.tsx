@@ -9,18 +9,20 @@ import ToolCard from "@/components/dashboard/ToolCard";
 import AddToolModal from "@/components/dashboard/AddToolModal";
 import Link from "next/link";
 import {
-  FiArrowLeft,
   FiPlus,
   FiTool,
   FiEdit2,
-  FiCheckCircle,
-  FiXCircle,
   FiPackage,
   FiTag,
   FiLayers,
   FiFileText,
   FiCheck,
+  FiHome,
+  FiGrid,
+  FiMenu,
+  FiX,
 } from "react-icons/fi";
+import { FaHistory } from "react-icons/fa";
 
 interface ToolData {
   _id: Id<"tools">;
@@ -35,7 +37,7 @@ interface ToolData {
 /**
  * Manage Tools Page
  * Dedicated page for users to manage their personal tool inventory with a vibrant,
- * modern UI powered by React Icons and Tailwind CSS.
+ * modern UI powered by React Icons, Tailwind CSS, and a fully responsive navigation bar.
  */
 export default function ManageToolsPage() {
   const { user } = useUser();
@@ -44,6 +46,7 @@ export default function ManageToolsPage() {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingTool, setEditingTool] = useState<ToolData | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Form states for editing
   const [name, setName] = useState("");
@@ -89,30 +92,7 @@ export default function ManageToolsPage() {
   const myTools = tools?.filter((tool) => user && tool.userId === user.id);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/20 to-slate-50">
-      {/* Top Navbar */}
-      <nav className="w-full bg-white/80 backdrop-blur-md border-b border-slate-100 py-4 px-8 flex justify-between items-center sticky top-0 z-40 shadow-xs">
-        <div className="flex items-center space-x-3">
-          <Link
-            href="/dashboard"
-            className="group flex items-center space-x-2 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors bg-slate-50 hover:bg-indigo-50 px-3.5 py-2 rounded-xl border border-slate-100"
-          >
-            <FiArrowLeft className="text-slate-400 group-hover:text-indigo-600 transition-colors" />
-            <span>Dashboard</span>
-          </Link>
-          <div className="h-4 w-[1px] bg-slate-200" />
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-100">
-              <FiTool className="text-sm" />
-            </div>
-            <span className="text-sm font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-              Inventory Management
-            </span>
-          </div>
-        </div>
-        <UserButton />
-      </nav>
-
+    <main className="bg-gradient-to-br from-slate-50 via-indigo-50/20 to-slate-50">
       {/* Content Area */}
       <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
         {/* Header Banner */}

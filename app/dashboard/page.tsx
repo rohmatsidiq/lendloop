@@ -8,6 +8,7 @@ import Link from "next/link";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import RequestList from "@/components/dashboard/RequestList";
+import PublicToolList from "@/components/public/PublicToolList";
 
 /**
  * Dashboard Executive Summary Page
@@ -37,35 +38,16 @@ export default function DashboardPage() {
       (req) => req.ownerId === user.id && req.status === "Approved",
     ).length || 0;
 
+  // Filter requests to show ONLY active ones (Pending & Approved) on the dashboard
+  const activeRequests =
+    requests?.filter(
+      (req) => req.status === "Pending" || req.status === "Approved",
+    ) || [];
+
   return (
     <main className="min-h-screen bg-slate-50/50">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 py-4 px-8 flex justify-between items-center shadow-xs">
-        <div className="flex items-center space-x-4">
-          <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-base shadow-md shadow-indigo-100">
-            L
-          </div>
-          <span className="text-lg font-extrabold tracking-tight text-slate-900">
-            Lend<span className="text-indigo-600">Loop</span>
-          </span>
-          <span className="text-slate-300">/</span>
-          <span className="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
-            Dashboard
-          </span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Link
-            href="/"
-            className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors"
-          >
-            &larr; Back to Home
-          </Link>
-          <UserButton />
-        </div>
-      </nav>
-
       {/* Main Container */}
-      <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
+      <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
         <DashboardHeader firstName={user.firstName} />
         <DashboardStats
           totalMyTools={totalMyTools}
@@ -79,11 +61,27 @@ export default function DashboardPage() {
             <h2 className="text-xl font-bold text-slate-900 tracking-tight">
               Active Requests & Borrow Status
             </h2>
-            <span className="text-xs font-medium text-slate-400">
-              Real-time synchronization
-            </span>
+            <Link
+              href="/dashboard/history"
+              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+            >
+              View Full History &rarr;
+            </Link>
           </div>
-          <RequestList />
+          {/* Pass only active requests or let RequestList handle active filtering */}
+          <RequestList requestsData={activeRequests} />
+        </div>
+
+        <div className="">
+          <div className="mb-10">
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
+              Available Neighborhood Tools
+            </h2>
+            <p className="text-sm text-gray-500 mt-2">
+              Browse items shared by people around your neighborhood.
+            </p>
+          </div>
+          <PublicToolList />
         </div>
       </div>
     </main>

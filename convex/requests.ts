@@ -2,13 +2,18 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
 /**
- * Fetches all borrow requests related to a specific user (either as owner or borrower)
- * and enriches the data with both the borrower's name and the owner's name.
+ * getUserRequests
+ * Mengambil semua permohonan peminjaman terkait user (sebagai owner atau borrower)
+ * beserta opsi filter opsional berdasarkan rentang tanggal/waktu.
  */
 export const getUserRequests = query({
-  args: { userId: v.string() },
+  args: {
+    userId: v.string(),
+    startDateFilter: v.optional(v.string()), // Opsional: Filter tanggal mulai (YYYY-MM-DD)
+    endDateFilter: v.optional(v.string()), // Opsional: Filter tanggal selesai (YYYY-MM-DD)
+  },
   handler: async (ctx, args) => {
-    // 1. Fetch all requests where the user is either the owner or borrower
+    // 1. Ambil semua requests di mana user terlibat sebagai owner atau borrower
     const requests = await ctx.db
       .query("requests")
       .filter((q) =>
@@ -19,7 +24,7 @@ export const getUserRequests = query({
       )
       .collect();
 
-    // 2. Map through requests and fetch corresponding user profile names
+    // 2. Map data untuk memperkaya nama borrower dan owner
     const requestsWithDetails = await Promise.all(
       requests.map(async (request) => {
         const borrower = await ctx.db
@@ -40,7 +45,20 @@ export const getUserRequests = query({
       }),
     );
 
-    return requestsWithDetails;
+    // 3. Terapkan filter waktu di sisi query jika parameter waktu diberikan
+    let filteredRequests = requestsWithDetails;
+    if (args.startDateFilter) {
+      filteredRequests = filteredRequests.filter(
+        (req) => req.startDate >= args.startDateFilter!,
+      );
+    }
+    if (args.endDateFilter) {
+      filteredRequests = filteredRequests.filter(
+        (req) => req.endDate <= args.endDateFilter!,
+      );
+    }
+
+    return filteredRequests;
   },
 });
 
