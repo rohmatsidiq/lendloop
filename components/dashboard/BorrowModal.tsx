@@ -24,7 +24,7 @@ export default function BorrowModal({
   ownerId,
 }: BorrowModalProps) {
   const { user } = useUser();
-  const createRequest = useMutation(api.requests.createBorrowRequest);
+  const createRequest = useMutation(api.requests.createRequest);
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
